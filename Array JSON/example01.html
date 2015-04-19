@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+
+
+<script>
+      var id = 0 ;
+     
+      var  cart = [];
+
+
+	function agregar(){	
+    var element = {} ;
+		var name =  document.getElementById("name").value ;
+		var email = document.getElementById("email").value ; 
+		var phone = document.getElementById("phone").value ; 
+		element.id = id ;
+		element.name = name;
+		element.email = email;
+		element.phone = phone;
+		cart.push(element);
+    id = id + 1 ;
+		var myJsonObject = JSON.stringify(cart);
+    	//console.log(myJsonObject);
+       htmlTable(cart);
+}
+
+ function update(){
+   var item = $('#update').attr('data-id') ;
+ 	 for (var i=0; i<cart.length; i++) {
+ 	 if (cart[i].id == item) {
+       cart[i].name = document.getElementById("name").value;
+    break;
+  }
+}
+     htmlTable(cart);
+
+ }
+
+
+function deleteItem(index){
+  
+  console.log(index);
+
+  cart.splice(index, 1);
+  
+  console.log(cart);
+   
+  id = id - 1 ; 
+
+  htmlTable(cart);
+}
+
+
+
+   function edit(valor)
+      {
+         console.log(cart);
+          $("#save,#update").toggle();
+
+            for (var i=0; i<cart.length; i++) {
+            if (cart[i].id == valor) {
+            // cart[i].Username = valor;
+            document.getElementById("name").value = cart[i].name ;
+              break;
+               }  
+         	
+          $("#update").attr('data-id',valor);
+      }
+
+}
+
+
+	function htmlTable(list){
+
+   var tr;
+           $("#excelDataTable").find("tr:gt(0)").remove();
+        for (var i = 0; i < list.length; i++) {
+
+            tr = $('<tr/>');
+            tr.append("<td>" + list[i].name + "</td>");
+            tr.append("<td>" + list[i].email + "</td>");
+            tr.append("<td>" + list[i].phone + "</td>");
+       	    tr.append("<td>" + "<a href='#' onclick='edit("+list[i].id+")'>Edit</a>" + "</td>");
+       	    tr.append("<td>" + "<a href='#' onclick='deleteItem("+ list.indexOf(list[i])+")'>Delete</a>" + "</td>");
+            $("#excelDataTable").append(tr);
+        }
+	}
+
+
+
+
+// Generico
+ function buildHtmlTable(myList) {
+     var columns = addAllColumnHeaders(myList);
+     for (var i = 0 ; i < myList.length ; i++) {
+         var row$ = $('<tr/>');
+         for (var colIndex = 0 ; colIndex < columns.length ; colIndex++) {
+             var cellValue = myList[i][columns[colIndex]];
+             if (cellValue == null) { cellValue = ""; }
+             row$.append($('<td/>').html(cellValue));
+         }
+         row$.append($('<td/>').html("eliminar"));
+         row$.append($('<td/>').html("update"));
+         $("#excelDataTable").append(row$);
+     }
+ }
+ 
+ function addAllColumnHeaders(myList)
+ {
+     var columnSet = [];
+     for (var i = 0 ; i < myList.length ; i++) {
+         var rowHash = myList[i];
+         for (var key in rowHash) {
+             if ($.inArray(key, columnSet) == -1){
+                 columnSet.push(key);
+             }
+         }
+     }
+   
+     return columnSet;
+ }
+
+
+</script>	
+</head>
+
+<body>
+
+<h2>example</h2>
+
+<p id="demo"></p>
+
+      <br/>
+      Name :<input id="name" name="name" type="text" value="Name" />
+      Email :<input id="email" type="text" value="user@gmail.com"  />
+      Mobile :<input id="phone" type="text" value="+51 23126"  />
+      <a id="myLink" title="agregar"
+ 		href="#" onclick="agregar();return false;">agregar</a>
+      <a href="#" id="update" onclick="update();return false;" data-id="0" style="display:none;">Update</a>
+      <br/>
+      <br/>
+      <table id="excelDataTable" border="1">
+         <thead>
+            <tr>
+               <td>Name </td>
+               <td>Email</td>
+               <td>Phone</td>
+               <td>Edit</td>
+               <td>Delete</td>
+            </tr> 
+         </thead>
+
+ 	  </table>
+  
+</body>
+
+
+
+</html>
